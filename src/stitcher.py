@@ -73,6 +73,7 @@ def build_stitched(src, n=5, force=False):
         return result, out
     records = load_beats(show)
     moments = pick_moments(records)
+    n = max(1, min(n, len(records) // 10))   # scale montages with show length: 2 eps -> 1, 50 eps -> 5
     premise = episodes_by_num[min(episodes_by_num)]["logline"]
 
     raw = chat(stitch_prompt(premise, render_moments(moments, episodes_by_num), n),

@@ -28,8 +28,11 @@ if __name__ == "__main__":
 
     t0 = time.time()
     print(f"=== Promo finder | picker: {current_model()} | judge: {judge_model()} ===\n")
-    out = run_pipeline(args.src, workers=args.workers, force=args.force,
-                       stitch=not args.no_stitch, limit=args.limit)
+    try:
+        out = run_pipeline(args.src, workers=args.workers, force=args.force,
+                           stitch=not args.no_stitch, limit=args.limit)
+    except RuntimeError as e:          # a clear one-line reason instead of a long traceback
+        raise SystemExit(f"\nSTOPPED: {e}")
 
     print("\nPOST FIRST (acquisition list):")
     for i, p in enumerate(out["acquisition"], 1):

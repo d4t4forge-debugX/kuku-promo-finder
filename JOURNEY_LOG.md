@@ -42,7 +42,7 @@ Tools used: Claude (planning, code drafts, explanations, reviews) · Gemini API 
 - 81 single promos + 5 montages -> 79 usable (7 duplicates rejected, 7 auto-fixed); 11 flagged for human review.
 - Gold set (human, blind): **4/5** found, each as the tool's #1 in its episode; end gap **1.4s**, start gap **13.2s**; Ep 34 missed.
 - Independent audit: **79/79** promos pass 7 checks against the raw scripts; CSV rows match.
-- Automated tests: **13/13** pass (parser, AI-answer handling, all validator rules, eval maths).
+- Automated tests: **22/22** pass (parser, AI-answer handling, all validator rules, timecodes, run tags, app logic, eval maths). Started at 13; 9 added with the refactor and the app.
 - Stability: re-ran Eps 3, 23, 41 -> **4/4** promos picked again with identical timestamps.
 - Second judge (gpt-oss-120b, 16-promo sample): red-flag agreement **15/16**, same top pick, Spearman **0.38** (moderate) -> ranking = shortlist for an editor, not autopilot.
 - Weak spots: long episodes (more good promos than it returns), quiet/visual episodes (Ep 14), hook choice.
@@ -100,3 +100,14 @@ Tools used: Claude (planning, code drafts, explanations, reviews) · Gemini API 
 - Groq key: first run failed `GROQ_API_KEY is missing` (key not yet in .env). No Llama chat model on my Groq account -> used openai/gpt-oss-120b.
 - `eval/judge_agreement.py`: 16 calls. Spearman 0.38, gap 1.7, red flags 15/16. GPT-oss is harsher; biggest disagreements E34-P1, E47-P1 (8 vs 4).
 - Idea for scale: average two judges from different families; calibrate against real click-through data.
+
+### [02:15] Pre-submission checks (Task 1)
+- Leak check before commit. AI got it wrong: Claude's search command filtered out the very lines it was meant to find (`grep -v '"episode"'` hid the gold-set hook/cliffhanger lines). Caught by asking why the expected hits were missing.
+- Found short script quotes in eval/gold_set*.json hook/cliffhanger notes -> paraphrased (timestamps unchanged; re-ran evaluate: still 4/5, 13.2s, 1.4s). Made-up test lines changed so they don't resemble the show.
+- Git history scan for key patterns: 0 hits in all commits; GitHub has the same commits as local; the blocked commit is not in history.
+- Pushed app + refactor + checks (commit 52e4775).
+- Fresh-clone test (empty folder, new venv, README word for word): install OK, 22 tests pass. Found: with no key the pipeline kept going and crashed with a misleading "No beats" error -> now stops after step 1 with a clear reason.
+- Clean-clone run on the original zip (--limit 2): 80s, 11 calls, ~20k in / ~3.4k out tokens; only the zip show's 4 files (nothing from my machine).
+- Stability, more honestly: the clean re-run of Eps 1-2 kept the same endings but changed one start (1:30.8 -> 1:47.4) and returned 1 promo instead of 2 for Ep 2. Repeatable, not deterministic (temperature 0.2).
+- Found: montage count was fixed at 5, so a 2-episode run got 5 near-duplicate montages -> now scales with show length (1 per 10 episodes, 1 to 5).
+- Found again: real key pasted into .env.example (not committed) -> restored the blank template from the last commit.
