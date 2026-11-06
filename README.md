@@ -24,7 +24,7 @@ scripts ──► 1. parser (code)          every line -> {id, start, end, speak
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env            # add your API key + model names
+cp .env.example .env            # then open .env and paste your key after GEMINI_API_KEY= (or set LLM_PROVIDER + that provider's key)
 python check_key.py             # confirms the key and lists models
 python run.py path/to/show      # folder of episode .txt files, or a .zip
 ```

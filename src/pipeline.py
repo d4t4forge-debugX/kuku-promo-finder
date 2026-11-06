@@ -22,7 +22,10 @@ def run_pipeline(src, workers=4, force=False, stitch=True, limit=None, step=prin
     Returns where everything was saved plus the post-first list.
     """
     step("[1/5] AI reads every episode (beats)...")
-    run_show(src, workers=workers, force=force, limit=limit)
+    records = run_show(src, workers=workers, force=force, limit=limit)
+    if not records:     # every episode failed (bad key, wrong model, no network): stop with a clear reason
+        raise RuntimeError("No episode was processed, so there is nothing to rank. "
+                           "Check the API key, provider and model name in .env (run: python check_key.py).")
 
     step("[2/5] Rule checks on single-clip promos...")
     promos, _ = build_single_promos(src)
