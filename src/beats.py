@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from src.llm_client import USAGE, chat, current_model
-from src.parser import fmt, load_show, render_for_llm, show_key
+from src.parser import fmt, load_show, render_for_llm, sanity_check, show_key
 from src.prompts import PROMPT_VERSION, SYSTEM_EDITOR, beats_prompt
 
 
@@ -108,6 +108,12 @@ def run_show(src, workers=4, force=False, limit=None):
     episodes = load_show(src)
     if limit:
         episodes = episodes[:limit]
+    problems = sanity_check(episodes)
+    for p in problems:
+        print(f"  INPUT WARNING: {p}")
+    fatal = [p for p in problems if "no episode number in the header or the file name" in p or "more than once" in p]
+    if fatal:
+        raise RuntimeError("Input problem, fix the script files first: " + "; ".join(fatal))
     premise = episodes[0]["logline"]
     cache_dir = Path("outputs/beats") / show_key(src)
     cache_dir.mkdir(parents=True, exist_ok=True)

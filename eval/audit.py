@@ -24,9 +24,9 @@ import sys
 import zipfile
 from pathlib import Path
 
-TIME = re.compile(r"Start: \((\d{2}):(\d{2}\.\d{2})\) \| End: \((\d{2}):(\d{2}\.\d{2})\)")
+TIME = re.compile(r"Start: \((\d{1,2}):(\d{2}\.\d{2})\) \| End: \((\d{1,2}):(\d{2}\.\d{2})\)")
 HEAD = re.compile(r"^\*\*(.+?):\*\*$")
-EP_NO = re.compile(r"EPISODE NUMBER:\s*Episode\s*(\d+)")
+EP_NO = re.compile(r"EPISODE NUMBER:\D*(\d+)", re.I)   # "Episode 1", "Ep.2 (Part B)"
 NON_DIALOGUE = {"CAMERA", "ACTION", "SOUND FX"}
 TOL = 0.011   # timestamps have 2 decimals; allow rounding noise
 
@@ -37,13 +37,16 @@ def read_raw(src):
     texts = []
     if src.suffix == ".zip":
         with zipfile.ZipFile(src) as z:
-            texts = [z.read(n).decode("utf-8", "replace") for n in z.namelist()
+            texts = [(Path(n).name, z.read(n).decode("utf-8", "replace")) for n in z.namelist()
                      if n.endswith(".txt") and not n.startswith("__MACOSX")]
     else:
-        texts = [f.read_text(encoding="utf-8", errors="replace") for f in src.glob("*.txt")]
+        texts = [(f.name, f.read_text(encoding="utf-8", errors="replace")) for f in src.glob("*.txt")]
     episodes = {}
-    for text in texts:
-        num = int(EP_NO.search(text).group(1))
+    for name, text in texts:
+        m = EP_NO.search(text) or re.search(r"(\d+)", Path(name).stem)   # header, else file name
+        if not m:
+            raise SystemExit(f"AUDIT STOPPED: no episode number in {name}")
+        num = int(m.group(1))
         rows, header = [], None
         for line in text.splitlines():
             line = line.strip()

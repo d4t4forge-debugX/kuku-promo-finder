@@ -186,3 +186,59 @@ if __name__ == "__main__":   # lets you run without pytest:  python -m tests.tes
         t()
         print("PASS", t.__name__)
     print(f"\nAll {len(tests)} tests passed.")
+
+def test_strict_json_error_retries_without_json_mode(monkeypatch):
+    """Groq rejects imperfect JSON in strict mode (400 'Failed to generate JSON').
+    The retry must drop strict mode instead of failing the same way again. Fake client, no API call."""
+    from types import SimpleNamespace
+    from src import llm_client
+
+    seen = []   # which calls asked for strict JSON mode
+
+    def fake_create(**kwargs):
+        seen.append("response_format" in kwargs)
+        if len(seen) == 1:
+            raise Exception("Error code: 400 - Failed to generate JSON. Please adjust your prompt.")
+        msg = SimpleNamespace(content='Sure! {"ok": true}')
+        usage = SimpleNamespace(prompt_tokens=5, completion_tokens=3, total_tokens=8)
+        return SimpleNamespace(choices=[SimpleNamespace(message=msg)], usage=usage)
+
+    fake = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=fake_create)))
+    monkeypatch.setattr(llm_client, "get_client", lambda provider=None: (fake, "fake"))
+    monkeypatch.setattr(llm_client.time, "sleep", lambda s: None)   # don't actually wait
+
+    raw = llm_client.chat("x", model="fake-model", json_mode=True)
+    assert seen == [True, False]          # 1st strict, retry without strict mode
+    assert parse_json(raw) == {"ok": True}  # JSON still recovered from plain text
+
+
+def test_messy_input_is_reported_not_dropped():
+    """New shows can be messy. A one-digit minute must still parse; an unreadable timing row,
+    an empty line and a too-short episode must be REPORTED by sanity_check, never silently lost."""
+    from src.parser import sanity_check
+    messy = """EPISODE NUMBER: Ep.2 (Part B)
+
+**ACTION:**
+Start: (0:01.00) | End: (00:05.00)
+A door opens.
+
+**MARA:**
+Start: (00:05.00) | End: (00:08.00)
+"Who are you?"
+
+**ACTION:**
+Start: (00:08.00) | End: (00:10.00)
+
+**ACTION:**
+Start: 00:10.00 - 00:12.00
+Broken timing row.
+"""
+    ep = parse_episode(messy, "episode-002-test.txt")
+    assert ep["episode"] == 2
+    assert ep["lines"][0]["start"] == 1.0                 # one-digit minute accepted
+    assert ep["lines"][1]["emotion"] == ""                # missing emotion tag is fine
+    assert len(ep["skipped_rows"]) == 1                    # broken row kept for the report
+    problems = " | ".join(sanity_check([ep]))
+    assert "could not read timing row" in problems
+    assert "with no text" in problems
+    assert "too short" in problems

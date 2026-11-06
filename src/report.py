@@ -116,6 +116,9 @@ def write_report(src):
           "New viewers who tap a promo start at Episode 1, so these clips match what they are about to watch. "
           "Order avoids repeating the same episode or hook type back-to-back.\n"]
     md += [promo_block(i, p) for i, p in enumerate(acq, 1)]
+    if not acq:   # say WHY it is empty instead of showing a blank section
+        md += [f"**No promo in episodes 1-{ACQ_MAX_EP} passed without a review flag.** "
+               "Nothing is safe to auto-post; the editor should check the flagged candidates in section 3.\n"]
     md += ["\n## 2. Best overall (all episodes, by score)\n",
            "| # | Promo | Segments | Sec | Score | Hook type | Review |", "|---|---|---|---|---|---|---|"]
     md += [f"| {p['rank']} | {p['promo_id']} | {seg_text(p)} | {p['duration']} | {p['final_score']} | "

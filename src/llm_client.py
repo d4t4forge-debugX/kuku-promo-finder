@@ -66,12 +66,19 @@ def chat(prompt, system="You are a helpful assistant.", model=None, provider=Non
                 with _usage_lock:
                     USAGE["calls"] += 1
                     USAGE["input_tokens"] += resp.usage.prompt_tokens or 0
-                    USAGE["output_tokens"] += resp.usage.completion_tokens or 0
+                    # Billed output = everything except the prompt. Gemini 3 "thinking" tokens are
+                    # billed as output but are NOT in completion_tokens, only in total_tokens.
+                    u = resp.usage
+                    USAGE["output_tokens"] += ((u.total_tokens or 0) - (u.prompt_tokens or 0)) or (u.completion_tokens or 0)
             return resp.choices[0].message.content
         except Exception as e:
             if attempt == retries:
                 raise
             is_rate_limit = "429" in str(e) or "RateLimit" in type(e).__name__
+            if extra and "JSON" in str(e):
+                # Some providers (e.g. Groq) reject a reply that isn't perfect JSON in strict mode.
+                # Retry without strict mode; the caller's parse_json() digs the JSON out of plain text.
+                extra = {}
             wait = (2 ** attempt) * (5 if is_rate_limit else 1)  # rate limits: 10s, 20s, 40s, 80s
             print(f"  [llm_client] attempt {attempt} failed ({type(e).__name__}: {e}). Retrying in {wait}s...")
             time.sleep(wait)

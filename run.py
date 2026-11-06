@@ -38,5 +38,7 @@ if __name__ == "__main__":
     for i, p in enumerate(out["acquisition"], 1):
         print(f"  {i}. {p['promo_id']:<7} {seg_text(p)} ({p['duration']}s, score {p['final_score']})")
         print(f"     hook: {p['hook'][:100]}")
+    if not out["acquisition"]:
+        print("  (none: every early-episode promo has a review flag; see 'Needs a human look' in the report)")
     print(f"\nDone in {time.time() - t0:.0f}s | tokens this run: {out['usage']}")
     print(f"Report    -> {out['report']}\nCSV       -> {out['csv']}\nTimecodes -> {out['timecodes']}")

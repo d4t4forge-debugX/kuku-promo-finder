@@ -29,21 +29,28 @@ Tools used: Claude (planning, code drafts, explanations, reviews) · Gemini API 
 |---|---|---|---|---|
 | Step 3 | Gemini picker | E02-P2 "cliffhanger" was a payoff (groom stunned silent): question already answered | Read the picks by hand; judge later independently flagged it `resolved_inside` | Judge penalty -1.0 + human review flag |
 | Step 3 | Gemini picker | Ep 1 promos just split the episode in two (0:39-1:30, 1:30-2:18), long and lazy | Reading output | Judge + ranking; noted as limitation |
-| Step 3 | Gemini picker | Self-scores all 23-27/30: useless for ranking | Counted score distribution | Added independent judge model |
-| Step 5 | Gemini judge | Standalone score almost always 9: weak signal on that axis | Score distribution | Kept low weight (20%); noted as limitation |
+| Step 3 | Gemini picker | Self-scores 64/81 between 23-27/30 (range 17-28): useless for ranking | Counted score distribution | Added independent judge model |
+| Step 5 | Gemini judge | Standalone score 9 on 57/79 promos: weak signal on that axis | Score distribution | Kept low weight (20%); noted as limitation |
 | Step 5 | My ranker code | Promos the judge failed on (429) got score 0 + fake "disagree" flag | Saw E19-E39 at bottom with empty scores | Exclude unjudged promos + warning |
 | Gold set | Me (human) | My starts skipped strong hooks (Ep 24 started 2.5s after the whip strike; Ep 34 began mid-trial without context) | AI critique after the blind test | Lesson: open on a physical hit or the stakes |
 | Cross-check | Claude-written validator | "Move start to hook - 0.5s" put 3 starts mid-shot (E11-P1 = #3 to post, S1, S4) | Independent auditor: 76/79 | Snap to real row starts |
 | Cross-check | Claude's first fix | New starts landed inside another spoken line (E11-P1, S1) | Auditor again: 77/79 | Only cut at "clean" row starts (not mid-dialogue) -> 79/79 |
+| Fresh clone | Claude-written pipeline | No early stop: with no API key every episode failed, then it crashed later with "No beats" | Fresh-clone test with no key | Early stop + clear STOPPED message in run.py |
+| Zip test | Claude-written stitcher | Always 5 montages, so a 2-episode show got 5 near-duplicates | Read the zip test output | Montage count scales with show length (2 eps -> 1) |
+| Cost check | Claude-written token counter | Counted only `completion_tokens`; Gemini 3 thinking tokens (billed as output) were missing: 26 counted vs 405 billed in a test call | Compared my log (~43K output) with AI Studio chart (~320K) and bill (Rs 219.62 on 6 Nov) | output = total - prompt |
+| Groq swap test | Our llm_client (Claude-written) + Groq strict JSON mode | Groq rejected an imperfect-JSON reply (400); our retry repeated strict mode 3x, so Ep 2 failed | Running the full pipeline on Groq, --limit 3 | Retry drops strict mode, parse_json reads plain text; test fails with fix off, passes with it on |
+| Messy show test | Claude-written parser | One-digit timestamp silently dropped a line; bad episode header gave episode None; sanity_check reported nothing and the pipeline never called it | Made-up messy 3-episode show, counted Start rows by hand (14 vs 13) | Accept 1-2 digit minutes, report skipped rows / empty text / too short, number from file name, INPUT WARNING at step 1, stop on missing/duplicate numbers; test added |
+| Messy show test | Our report | Post-first list empty with no explanation (Groq judge flagged all as confusing) | Reading the run output | Report and run.py now say why it is empty |
+| Messy show test | Claude-written auditor | Its own strict reader crashed on 'Ep.2' / a header with no number (traceback) | Running the audit on the messy show | Same formats accepted, number from file name, clear AUDIT STOPPED message; still no src imports; real show still 79/79, messy 6/6 |
 | GitHub | Me | Real API key ended up in `.env.example` | GitHub push protection blocked the push | Blanked template, `git commit --amend`, re-pushed, rotated key |
 
 ## Results so far
 - 50/50 episodes processed in ~5 min, ~210k tokens; 0 hallucinated line IDs.
-- 81 single promos + 5 montages -> 79 usable (7 duplicates rejected, 7 auto-fixed); 11 flagged for human review.
+- 81 single promos + 5 montages -> 79 usable (7 duplicates rejected, 3 auto-fixed; report header: found 86 = ok 76, auto-fixed 3, rejected 7); 11 flagged for human review.
 - Gold set (human, blind): **4/5** found, each as the tool's #1 in its episode; end gap **1.4s**, start gap **13.2s**; Ep 34 missed.
 - Independent audit: **79/79** promos pass 7 checks against the raw scripts; CSV rows match.
-- Automated tests: **22/22** pass (parser, AI-answer handling, all validator rules, timecodes, run tags, app logic, eval maths). Started at 13; 9 added with the refactor and the app.
-- Stability: re-ran Eps 3, 23, 41 -> **4/4** promos picked again with identical timestamps.
+- Automated tests: **24/24** pass (22 + Groq JSON-retry test + messy-input test, 7 Nov) (parser, AI-answer handling, all validator rules, timecodes, run tags, app logic, eval maths). Started at 13; 9 added with the refactor and the app.
+- Stability: re-ran Eps 3, 23, 41 -> **4/4** promos picked again with identical timestamps. Caveat: a clean re-run of Eps 1-2 moved Ep 1's start (1:30.8 -> 1:47.4) and gave Ep 2 one promo fewer: repeatable, not deterministic.
 - Second judge (gpt-oss-120b, 16-promo sample): red-flag agreement **15/16**, same top pick, Spearman **0.38** (moderate) -> ranking = shortlist for an editor, not autopilot.
 - Weak spots: long episodes (more good promos than it returns), quiet/visual episodes (Ep 14), hook choice.
 

@@ -16,7 +16,7 @@ import zipfile
 from pathlib import Path
 
 # ---------- patterns (regular expressions) ----------
-TIME_RE = re.compile(r"^Start: \((\d{2}):(\d{2}\.\d{2})\) \| End: \((\d{2}):(\d{2}\.\d{2})\)$")
+TIME_RE = re.compile(r"^Start: \((\d{1,2}):(\d{2}\.\d{2})\) \| End: \((\d{1,2}):(\d{2}\.\d{2})\)$")  # 1 or 2 digit minutes
 HEADER_RE = re.compile(r"^\*\*(.+?):\*\*$")            # **CAMERA:**  or  **LADY JULIANA (Confused):**
 SPEAKER_RE = re.compile(r"^(.+?)\s*\((.*)\)$")         # LADY JULIANA (Confused, Breathless)
 SCENE_RE = re.compile(r"^SCENE\s+(\d+)")
@@ -65,7 +65,7 @@ def classify(header):
 def parse_episode(text, source_name=""):
     """Parse ONE episode's text into a dict with metadata + a list of timed lines."""
     ep = {"episode": None, "logline": "", "continuity": "", "source": source_name,
-          "scenes": [], "lines": []}
+          "scenes": [], "lines": [], "skipped_rows": []}
     rows = text.splitlines()
     header = None          # the **HEADER:** we saw most recently, waiting for its Start/End line
     scene_no = 0
@@ -107,6 +107,8 @@ def parse_episode(text, source_name=""):
             header = None
             i = j
             continue
+        elif raw.startswith("Start:"):
+            ep["skipped_rows"].append(raw)   # a timing row we could not read: report it, never drop silently
         i += 1
 
     # sort by time (stable: ties keep file order), then give each line a short ID
@@ -134,6 +136,14 @@ def load_show(path):
         raise FileNotFoundError(f"No .txt scripts found in {path}")
 
     episodes = [parse_episode(txt, name) for name, txt in texts]
+    for e in episodes:
+        if e["episode"] is None:   # header unreadable: fall back to the first number in the file name
+            m = re.search(r"\d+", Path(e["source"]).stem)
+            if m:
+                e["episode"] = int(m.group())
+                e["episode_from_filename"] = True
+                for r in e["lines"]:
+                    r["episode"] = e["episode"]
     missing = [e["source"] for e in episodes if e["episode"] is None]
     if missing:
         print(f"WARNING: no episode number found in {missing}")
@@ -143,7 +153,21 @@ def load_show(path):
 def sanity_check(episodes):
     """Catch broken data early instead of getting weird promos later."""
     problems = []
+    nums = [e["episode"] for e in episodes]
+    for n in sorted({x for x in nums if x is not None and nums.count(x) > 1}):
+        problems.append(f"Episode number {n} appears more than once")
     for ep in episodes:
+        if ep["episode"] is None:
+            problems.append(f"{ep['source']}: no episode number in the header or the file name")
+        if ep.get("episode_from_filename"):
+            problems.append(f"{ep['source']}: header has no episode number, used {ep['episode']} from the file name")
+        for row in ep.get("skipped_rows", []):
+            problems.append(f"Ep {ep['episode']}: could not read timing row '{row}' (line skipped)")
+        empty = [r["id"] for r in ep["lines"] if not r["text"]]
+        if empty:
+            problems.append(f"Ep {ep['episode']}: {len(empty)} line(s) with no text ({', '.join(empty)})")
+        if ep["lines"] and ep["duration"] < 20:
+            problems.append(f"Ep {ep['episode']}: only {ep['duration']:.0f}s long, too short for a 20s single-episode promo")
         if not ep["lines"]:
             problems.append(f"Ep {ep['episode']}: no lines parsed")
         for r in ep["lines"]:

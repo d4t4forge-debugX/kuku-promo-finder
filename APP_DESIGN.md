@@ -19,7 +19,7 @@
      episode timeline bar, highlighted script, judge scores + verdict + suggested fix,
      score breakdown, rule flags, buttons [Approve] [Reject]
    - Export: download approved promos as CSV
-2. **Quality**: gold set (4/5, end gap 1.4s), audit (79/79), tests (22/22), stability (4/4),
+2. **Quality**: gold set (4/5, end gap 1.4s), audit (79/79), tests (24/24), stability (4/4),
    second judge (red flags 15/16, Spearman 0.38), read from outputs/final/*.md
 3. **Run on a new show**: upload scripts .zip + visitor's OWN API key (never saved), choose provider/models,
    episode limit, workers -> runs the full pipeline -> opens the result in the Inbox
