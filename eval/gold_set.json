@@ -1,0 +1,11 @@
+{
+  "annotator": "Rohit Shakya (human, blind)",
+  "method": "Blind human picks: for episodes 4, 14, 24, 34, 44 (every 10th, fixed rule, no cherry-picking) I read the script and chose the single best 20-60s promo before looking at the tool's output.",
+  "promos": [
+    {"episode": 4,  "start": "00:34.00", "end": "01:08.00", "hook": "stranger: A woman who was betrayed", "cliffhanger": "I don't know this man - will she accept?"},
+    {"episode": 14, "start": "00:26.50", "end": "01:23.50", "hook": "Nothing they didn't promise (bleeding hands)", "cliffhanger": "his gaze hardens - revenge coming"},
+    {"episode": 24, "start": "00:35.00", "end": "01:31.50", "hook": "You are a maid... not a woman whose opinion matters", "cliffhanger": "I will return - you cannot stop the healer"},
+    {"episode": 34, "start": "01:31.00", "end": "02:08.20", "hook": "We have further witnesses", "cliffhanger": "she admits it in court - what verdict?"},
+    {"episode": 44, "start": "00:34.20", "end": "01:10.40", "hook": "For three years I believed the man I loved was buried", "cliffhanger": "Her?! - Catherine sees who he chose"}
+  ]
+}
