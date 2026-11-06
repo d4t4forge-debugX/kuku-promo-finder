@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from src.llm_client import USAGE, chat, current_model
-from src.parser import fmt, load_show, render_for_llm
+from src.parser import fmt, load_show, render_for_llm, show_key
 from src.prompts import PROMPT_VERSION, SYSTEM_EDITOR, beats_prompt
 
 
@@ -109,7 +109,7 @@ def run_show(src, workers=4, force=False, limit=None):
     if limit:
         episodes = episodes[:limit]
     premise = episodes[0]["logline"]
-    cache_dir = Path("outputs/beats") / Path(src).stem
+    cache_dir = Path("outputs/beats") / show_key(src)
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"Model: {current_model()} | prompt {PROMPT_VERSION} | {len(episodes)} episodes | {workers} workers")

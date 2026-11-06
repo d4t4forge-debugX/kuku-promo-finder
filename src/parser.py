@@ -9,6 +9,7 @@ Every line of the script becomes one dict:
 Run:  python -m src.parser data/raw/broken_soldier
 """
 import json
+import os
 import re
 import sys
 import zipfile
@@ -33,6 +34,22 @@ def fmt(seconds):
     """118.88 -> '01:58.88' (same style as the scripts)"""
     m = int(seconds // 60)
     return f"{m:02d}:{seconds - m * 60:05.2f}"
+
+
+def timecode(seconds, fps=30):
+    """84.75 -> '00:01:24:22' (HH:MM:SS:FF), the format video editors use. ASSUMES 30 frames per second."""
+    frames = int(round(seconds * fps))
+    s, ff = divmod(frames, fps)
+    return f"{s // 3600:02d}:{s // 60 % 60:02d}:{s % 60:02d}:{ff:02d}"
+
+
+def show_key(src):
+    """
+    Name of a run's output folders: the show's folder/zip name, plus RUN_TAG if set.
+    RUN_TAG lets a second run of the SAME show (e.g. another picker model) keep its own results.
+    """
+    tag = os.getenv("RUN_TAG", "").strip()
+    return Path(src).stem + (f"__{tag}" if tag else "")
 
 
 def classify(header):

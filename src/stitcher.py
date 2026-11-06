@@ -15,7 +15,7 @@ from pathlib import Path
 from src.assembler import add_timestamps, load_beats
 from src.beats import parse_json
 from src.llm_client import USAGE, chat, current_model
-from src.parser import fmt, load_show
+from src.parser import fmt, load_show, show_key
 from src.prompts import STITCH_VERSION, SYSTEM_EDITOR, stitch_prompt
 from src.validators import validate
 
@@ -62,12 +62,15 @@ def resolve(row_gid, episodes_by_num):
 
 
 def build_stitched(src, n=5, force=False):
-    show = Path(src).stem
+    show = show_key(src)
     out = Path("outputs/promos") / f"{show}_stitched.json"
-    if out.exists() and not force:
-        return json.loads(out.read_text()), out
-
     episodes_by_num = {e["episode"]: e for e in load_show(src)}
+    if out.exists() and not force:
+        # cached montages are re-checked, so validator fixes apply without a new AI call
+        result = json.loads(out.read_text())
+        result["promos"] = [add_timestamps(validate(p, episodes_by_num)) for p in result["promos"]]
+        out.write_text(json.dumps(result, indent=2, ensure_ascii=False))
+        return result, out
     records = load_beats(show)
     moments = pick_moments(records)
     premise = episodes_by_num[min(episodes_by_num)]["logline"]

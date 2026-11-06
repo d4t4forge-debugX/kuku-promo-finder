@@ -1,11 +1,11 @@
 {
   "annotator": "AI-assisted revision (Claude critique, approved by Rohit)",
-  "method": "NOT BLIND. Rohit's v1 picks revised after seeing tool output and an AI critique (start on a physical hit or on the stakes). A learning example only; v1 (gold_set.json) is the blind accuracy test.",
+  "method": "NOT BLIND. Rohit's v1 picks revised after seeing tool output and an AI critique (start on a physical hit or on the stakes). A learning example only; v1 (gold_set.json) is the blind accuracy test. Notes are paraphrased (no script text).",
   "promos": [
-    {"episode": 4,  "start": "00:10.60", "end": "01:08.00", "hook": "You have finally found a man as worthless as everyone thinks you are", "cliffhanger": "I don't know this man - will she accept?"},
-    {"episode": 14, "start": "00:00.50", "end": "00:25.00", "hook": "bloody hand opens, revealing the ring: Now release my husband", "cliffhanger": "What have they done to you?"},
-    {"episode": 24, "start": "00:32.50", "end": "01:29.80", "hook": "riding crop strikes her", "cliffhanger": "I will return - you cannot stop the healer"},
-    {"episode": 34, "start": "00:01.20", "end": "00:54.20", "hook": "accused of witchcraft, unlawful healing and poisoning", "cliffhanger": "her own maid testifies against her: Yes"},
-    {"episode": 44, "start": "00:25.20", "end": "01:10.40", "hook": "Alexander... I thought you had died", "cliffhanger": "Her?!"}
+    {"episode": 4,  "start": "00:10.60", "end": "01:08.00", "hook": "her sister mocks her new husband as worthless", "cliffhanger": "she admits she does not know him: will she accept?"},
+    {"episode": 14, "start": "00:00.50", "end": "00:25.00", "hook": "her bloodied hand reveals the ring; she demands her husband's release", "cliffhanger": "he asks what they did to her"},
+    {"episode": 24, "start": "00:32.50", "end": "01:29.80", "hook": "a riding crop strikes her", "cliffhanger": "she silently vows to return and heal"},
+    {"episode": 34, "start": "00:01.20", "end": "00:54.20", "hook": "she is charged with witchcraft and poisoning", "cliffhanger": "her own maid testifies against her"},
+    {"episode": 44, "start": "00:25.20", "end": "01:10.40", "hook": "his ex says she thought he was dead", "cliffhanger": "she is stunned by who he chose"}
   ]
 }

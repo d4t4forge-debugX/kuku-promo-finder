@@ -18,6 +18,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+from src.parser import show_key, timecode
 from src.ranker import posting_order
 
 ACQ_MAX_EP = 15
@@ -27,6 +28,29 @@ def seg_text(p):
     return " + ".join(f"Ep{s['episode']} {s['start_ts']}-{s['end_ts']}" for s in p["segments"])
 
 
+def timecode_text(p):
+    """Same as seg_text but in editor timecodes: 'Ep9 00:00:05:15-00:00:55:06'."""
+    return " + ".join(f"Ep{s['episode']} {timecode(s['start'])}-{timecode(s['end'])}" for s in p["segments"])
+
+
+def write_timecode_csv(ranked, path):
+    """
+    Editor-ready cut list: ONE ROW PER SEGMENT, in posting-rank order, with HH:MM:SS:FF timecodes (30 fps).
+    An editor can cut every promo from this file without re-reading the scripts.
+    """
+    cols = ["rank", "promo_id", "segment", "of", "episode", "tc_in", "tc_out", "sec_in", "sec_out",
+            "promo_duration", "hook", "cliffhanger"]
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=cols)
+        w.writeheader()
+        for p in ranked:
+            for i, s in enumerate(p["segments"], start=1):
+                w.writerow({"rank": p["rank"], "promo_id": p["promo_id"], "segment": i, "of": len(p["segments"]),
+                            "episode": s["episode"], "tc_in": timecode(s["start"]), "tc_out": timecode(s["end"]),
+                            "sec_in": s["start"], "sec_out": s["end"], "promo_duration": p["duration"],
+                            "hook": p["hook"], "cliffhanger": p["cliffhanger"]})
+
+
 def acquisition_list(ranked, top_n=8):
     clean = [p for p in ranked
              if max(s["episode"] for s in p["segments"]) <= ACQ_MAX_EP and not p["review_reasons"]]
@@ -34,7 +58,7 @@ def acquisition_list(ranked, top_n=8):
 
 
 def write_csv(ranked, path):
-    cols = ["rank", "promo_id", "kind", "segments", "duration", "final_score",
+    cols = ["rank", "promo_id", "kind", "segments", "timecodes", "duration", "final_score",
             "judge_hook", "judge_cliffhanger", "judge_standalone", "judge_overall",
             "hook", "cliffhanger", "why", "hook_type", "judge_verdict", "judge_fix",
             "flags", "needs_review"]
@@ -45,7 +69,8 @@ def write_csv(ranked, path):
             j = p.get("judge", {})
             w.writerow({
                 "rank": p["rank"], "promo_id": p["promo_id"], "kind": p["kind"],
-                "segments": seg_text(p), "duration": p["duration"], "final_score": p["final_score"],
+                "segments": seg_text(p), "timecodes": timecode_text(p),
+                "duration": p["duration"], "final_score": p["final_score"],
                 "judge_hook": j.get("hook"), "judge_cliffhanger": j.get("cliffhanger"),
                 "judge_standalone": j.get("standalone"), "judge_overall": j.get("overall"),
                 "hook": p["hook"], "cliffhanger": p["cliffhanger"], "why": p["why"],
@@ -68,7 +93,7 @@ def promo_block(n, p):
 
 
 def write_report(src):
-    show = Path(src).stem
+    show = show_key(src)
     final = Path("outputs/final")
     data = json.loads((final / f"{show}_ranked.json").read_text())
     ranked = data["ranked"]
@@ -103,6 +128,7 @@ def write_report(src):
 
     (final / f"{show}_report.md").write_text("\n".join(md), encoding="utf-8")
     write_csv(ranked, final / f"{show}_promos.csv")
+    write_timecode_csv(ranked, final / f"{show}_timecodes.csv")
     return acq, final / f"{show}_report.md", final / f"{show}_promos.csv"
 
 

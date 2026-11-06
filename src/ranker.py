@@ -18,11 +18,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from src.beats import parse_json
-from src.llm_client import USAGE, chat
-from src.parser import load_show
-from src.prompts import JUDGE_VERSION, SYSTEM_JUDGE, judge_prompt
+from src.llm_client import USAGE, chat, current_model
+from src.parser import load_show, show_key
+from src.prompts import JUDGE_VERSION, PROMPT_VERSION, STITCH_VERSION, SYSTEM_JUDGE, judge_prompt
 
 WEIGHTS = {"hook": 0.35, "cliffhanger": 0.30, "standalone": 0.20, "overall": 0.15}
+EARLY_UNTIL_EP = 10      # promos starting at or before this episode get the funnel bonus
+SPOILER_FROM_EP = 31     # promos starting at or after this episode get the spoiler-risk penalty
 
 
 def judge_model():
@@ -67,9 +69,9 @@ def final_score(promo, v):
     adj = {}
     if "ends_on_episode_ending" in promo["flags"]:
         adj["ends_on_writer_cliffhanger"] = +0.3
-    if first_ep <= 10:
+    if first_ep <= EARLY_UNTIL_EP:
         adj["early_episode_funnel"] = +0.3      # viewer who taps lands on Ep 1: early clips match what they'll watch
-    elif first_ep > 30:
+    elif first_ep >= SPOILER_FROM_EP:
         adj["late_episode_spoiler_risk"] = -0.3
     if v.get("resolved_inside"):
         adj["resolved_inside_clip"] = -1.0
@@ -111,7 +113,7 @@ def posting_order(ranked, top_n=10):
 
 
 def rank_show(src, workers=6, force=False):
-    show = Path(src).stem
+    show = show_key(src)
     episodes_by_num = {e["episode"]: e for e in load_show(src)}
     folder = Path("outputs/promos")
     promos = json.loads((folder / f"{show}_single.json").read_text())
@@ -143,6 +145,7 @@ def rank_show(src, workers=6, force=False):
         p["judge"] = v
         p["final_score"], p["score_parts"] = final_score(p, v)
         p["review_reasons"] = needs_review(p, v)
+        p["spoiler_risk"] = p["segments"][0]["episode"] >= SPOILER_FROM_EP
         judged.append(p)
     if unjudged:
         print(f"WARNING: {len(unjudged)} promos not judged (re-run to retry): {unjudged}")
@@ -156,8 +159,13 @@ def rank_show(src, workers=6, force=False):
 
     out = Path("outputs/final") / f"{show}_ranked.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"show": show, "judge_model": judge_model(), "ranked": ranked,
-                               "posting_order": [p["promo_id"] for p in order]}, indent=2, ensure_ascii=False))
+    out.write_text(json.dumps({
+        "show": show, "source": Path(src).stem,
+        "picker_model": current_model(), "judge_model": judge_model(),
+        "prompt_versions": [PROMPT_VERSION, STITCH_VERSION, JUDGE_VERSION],
+        "episodes": {str(n): ep["duration"] for n, ep in sorted(episodes_by_num.items())},
+        "ranked": ranked, "posting_order": [p["promo_id"] for p in order],
+    }, indent=2, ensure_ascii=False))
     return ranked, order, out
 
 

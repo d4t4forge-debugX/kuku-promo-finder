@@ -1,0 +1,8 @@
+# Dark "studio" theme for the app (Streamlit reads this file automatically)
+[theme]
+base = "dark"
+primaryColor = "#F2A93B"
+backgroundColor = "#0E1014"
+secondaryBackgroundColor = "#161A23"
+textColor = "#E9ECF2"
+font = "sans serif"

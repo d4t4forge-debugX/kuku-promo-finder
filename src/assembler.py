@@ -12,7 +12,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from src.parser import fmt, load_show
+from src.parser import fmt, load_show, show_key
 from src.validators import dedupe, validate
 
 
@@ -47,7 +47,7 @@ def add_timestamps(promo):
 
 
 def build_single_promos(src):
-    show = Path(src).stem
+    show = show_key(src)
     episodes_by_num = {e["episode"]: e for e in load_show(src)}
     records = load_beats(show)
 

@@ -18,16 +18,27 @@ def total_len(promo):
     return round(sum(seg_len(s) for s in promo["segments"]), 2)
 
 
+def clean_starts(ep):
+    """Row start times where a clip may begin: a real row boundary that is not inside someone's spoken line."""
+    spoken = [(r["start"], r["end"]) for r in ep["lines"] if r["kind"] == "dialogue"]
+    return sorted({r["start"] for r in ep["lines"]
+                   if not any(a + 0.011 < r["start"] < b - 0.011 for a, b in spoken)})
+
+
 def snap(seg, ep):
-    """Move a cut point outward if it falls in the middle of a dialogue line."""
+    """
+    Move cut points to clean places:
+      - the END never falls inside a spoken line (move it out to the line's end)
+      - the START is a clean row start (real boundary, not mid-dialogue); if not, move back to the previous one
+    """
     start, end = seg["start"], seg["end"]
     for r in ep["lines"]:
-        if r["kind"] != "dialogue":
-            continue
-        if r["start"] < start < r["end"]:
-            start = r["start"]
-        if r["start"] < end < r["end"]:
+        if r["kind"] == "dialogue" and r["start"] < end < r["end"]:
             end = r["end"]
+    ok = clean_starts(ep)
+    if not any(abs(start - x) < 0.011 for x in ok):
+        earlier = [x for x in ok if x <= start]
+        start = max(earlier) if earlier else start
     return start, end
 
 
@@ -66,7 +77,11 @@ def validate(promo, episodes_by_num):
     first = promo["segments"][0]
     hook_offset = promo["hook_time"] - first["start"]
     if hook_offset > HOOK_WINDOW:
-        first["start"] = max(first["start"], promo["hook_time"] - 0.5)
+        # earliest real row start within the 3s before the hook (a clean cut with a tiny lead-in)
+        ep = episodes_by_num[first["episode"]]
+        window = [x for x in clean_starts(ep)
+                  if promo["hook_time"] - HOOK_WINDOW <= x <= promo["hook_time"]]
+        first["start"] = min(window) if window else promo["hook_time"]
         flags.append("moved_start_to_hook")
         status = "fixed"
     promo["hook_offset"] = round(promo["hook_time"] - first["start"], 2)
