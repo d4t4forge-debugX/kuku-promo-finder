@@ -21,9 +21,14 @@ QUALITY_FOLDERS = [Path("outputs/final"), Path("docs/quality")]   # local result
 
 
 # ------------------------------------------------------------------ runs
-def find_runs(folder=Path("outputs/final")):
-    """Finished runs on this computer: every <show>_ranked.json."""
-    return sorted(folder.glob("*_ranked.json")) if folder.exists() else []
+RUN_FOLDERS = (Path("outputs/final"), Path("demo/final"))   # local runs first, then the committed made-up demo
+
+
+def find_runs(folders=RUN_FOLDERS):
+    """Finished runs: every <show>_ranked.json in the local outputs, then the bundled demo."""
+    if isinstance(folders, Path):
+        folders = (folders,)
+    return [r for f in folders if f.exists() for r in sorted(f.glob("*_ranked.json"))]
 
 
 def episode_numbers(data):

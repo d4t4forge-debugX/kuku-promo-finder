@@ -1,0 +1,254 @@
+{
+  "show": "lighthouse_demo__groq",
+  "source": "lighthouse_demo",
+  "picker_model": "openai/gpt-oss-120b",
+  "judge_model": "openai/gpt-oss-120b",
+  "prompt_versions": [
+    "beats-v1",
+    "stitch-v1",
+    "judge-v1"
+  ],
+  "episodes": {
+    "1": 78.0,
+    "2": 72.0,
+    "3": 14.0
+  },
+  "ranked": [
+    {
+      "promo_id": "E01-P1",
+      "kind": "single",
+      "segments": [
+        {
+          "episode": 1,
+          "start": 12.0,
+          "end": 48.0,
+          "start_ts": "00:12.00",
+          "end_ts": "00:48.00"
+        }
+      ],
+      "hook_time": 12.0,
+      "hook": "Stranger calls Mara by her secret name, \"Wren\"",
+      "cliffhanger": "Mara discovers a dead body wearing her father's jacket – is her father really dead or a lie?",
+      "why": "A shocking personal reveal followed by a deadly mystery forces a scroll‑stop and a question begging a tap.",
+      "hook_type": "reveal",
+      "ai_scores": {
+        "hook_score": 9,
+        "cliffhanger_score": 9,
+        "standalone_score": 8
+      },
+      "ai_score": 26,
+      "hook_offset": 0.0,
+      "dialogue_share": 0.38,
+      "duration": 36.0,
+      "status": "fixed",
+      "flags": [
+        "moved_start_to_hook"
+      ],
+      "judge": {
+        "hook": 7,
+        "cliffhanger": 8,
+        "standalone": 5,
+        "overall": 6,
+        "resolved_inside": false,
+        "confusing": true,
+        "one_line_verdict": "Mysterious and tense but a bit muddled, the clip teases intrigue without fully grounding the viewer.",
+        "fix": "Introduce Mara’s name early (e.g., have her state it) to clear up the Wren/Mara confusion."
+      },
+      "final_score": 6.35,
+      "score_parts": {
+        "hook": 2.45,
+        "cliffhanger": 2.4,
+        "standalone": 1.0,
+        "overall": 0.9,
+        "early_episode_funnel": 0.3,
+        "confusing_for_stranger": -0.7
+      },
+      "review_reasons": [
+        "may_confuse_strangers"
+      ],
+      "spoiler_risk": false,
+      "rank": 1,
+      "post_order": 1
+    },
+    {
+      "promo_id": "S1",
+      "kind": "stitched",
+      "segments": [
+        {
+          "episode": 1,
+          "start": 12.0,
+          "end": 18.0,
+          "start_ts": "00:12.00",
+          "end_ts": "00:18.00"
+        },
+        {
+          "episode": 1,
+          "start": 38.0,
+          "end": 78.0,
+          "start_ts": "00:38.00",
+          "end_ts": "01:18.00"
+        }
+      ],
+      "hook_time": 12.0,
+      "hook": "A hoarse stranger, barely alive, calls Mara by her secret name \"Wren\".",
+      "cliffhanger": "Mara screams as the dead man's hand clamps her ankle and the screen cuts to black, leaving the true identity of her father and the stranger's purpose unknown.",
+      "why": "It drops viewers into a life‑or‑death rescue, reveals a personal secret instantly, then escalates to a family betrayal cliffhanger that forces them to tap for answers.",
+      "hook_type": "shocking_line",
+      "ai_scores": {},
+      "ai_score": 0,
+      "hook_offset": 0.0,
+      "dialogue_share": 0.37,
+      "duration": 46.0,
+      "status": "fixed",
+      "flags": [
+        "moved_start_to_hook",
+        "ends_on_episode_ending"
+      ],
+      "judge": {
+        "hook": 6,
+        "cliffhanger": 8,
+        "standalone": 3,
+        "overall": 5,
+        "resolved_inside": false,
+        "confusing": true,
+        "one_line_verdict": "Atmospheric but too cryptic to hook new viewers.",
+        "fix": "Clarify who Wren is within the first 2 seconds, e.g., show Mara looking at a photo of Wren."
+      },
+      "final_score": 5.75,
+      "score_parts": {
+        "hook": 2.1,
+        "cliffhanger": 2.4,
+        "standalone": 0.6,
+        "overall": 0.75,
+        "ends_on_writer_cliffhanger": 0.3,
+        "early_episode_funnel": 0.3,
+        "confusing_for_stranger": -0.7
+      },
+      "review_reasons": [
+        "may_confuse_strangers"
+      ],
+      "spoiler_risk": false,
+      "rank": 2,
+      "post_order": 3
+    },
+    {
+      "promo_id": "E01-P2",
+      "kind": "single",
+      "segments": [
+        {
+          "episode": 1,
+          "start": 56.0,
+          "end": 78.0,
+          "start_ts": "00:56.00",
+          "end_ts": "01:18.00"
+        }
+      ],
+      "hook_time": 56.0,
+      "hook": "Stranger says, \"Your father isn't who he says he is, Wren.\"",
+      "cliffhanger": "The dead hand clamps onto Mara's ankle as the lighthouse beam snaps dark – what will happen next?",
+      "why": "A betrayal confession plus immediate physical danger creates instant tension and an unanswered peril.",
+      "hook_type": "reveal",
+      "ai_scores": {
+        "hook_score": 9,
+        "cliffhanger_score": 9,
+        "standalone_score": 7
+      },
+      "ai_score": 25,
+      "hook_offset": 0.0,
+      "dialogue_share": 0.34,
+      "duration": 22.0,
+      "status": "ok",
+      "flags": [
+        "ends_on_episode_ending"
+      ],
+      "judge": {
+        "hook": 6,
+        "cliffhanger": 7,
+        "standalone": 3,
+        "overall": 5,
+        "resolved_inside": false,
+        "confusing": true,
+        "one_line_verdict": "Intriguing line but too opaque to hook new viewers effectively.",
+        "fix": "Show a quick flash of the father's face before the opening line to give context."
+      },
+      "final_score": 5.45,
+      "score_parts": {
+        "hook": 2.1,
+        "cliffhanger": 2.1,
+        "standalone": 0.6,
+        "overall": 0.75,
+        "ends_on_writer_cliffhanger": 0.3,
+        "early_episode_funnel": 0.3,
+        "confusing_for_stranger": -0.7
+      },
+      "review_reasons": [
+        "picker_and_judge_disagree",
+        "may_confuse_strangers"
+      ],
+      "spoiler_risk": false,
+      "rank": 3,
+      "post_order": 4
+    },
+    {
+      "promo_id": "E02-P1",
+      "kind": "single",
+      "segments": [
+        {
+          "episode": 2,
+          "start": 0.0,
+          "end": 58.0,
+          "start_ts": "00:00.00",
+          "end_ts": "00:58.00"
+        }
+      ],
+      "hook_time": 0.0,
+      "hook": "A match flares, lighting the father's scarred face in darkness",
+      "cliffhanger": "The lighthouse erupts in red light and dozens of boats head toward it – what will happen when they arrive?",
+      "why": "Violent visual hook grabs attention, and the looming fleet leaves the outcome unknown, enticing a click.",
+      "hook_type": "violence",
+      "ai_scores": {
+        "hook_score": 9,
+        "cliffhanger_score": 9,
+        "standalone_score": 8
+      },
+      "ai_score": 26,
+      "hook_offset": 0.0,
+      "dialogue_share": 0.39,
+      "duration": 58.0,
+      "status": "ok",
+      "flags": [],
+      "judge": {
+        "hook": 6,
+        "cliffhanger": 5,
+        "standalone": 3,
+        "overall": 4,
+        "resolved_inside": false,
+        "confusing": true,
+        "one_line_verdict": "Visually striking but too cryptic to hook new viewers.",
+        "fix": "Add a line of dialogue that poses a clear, urgent question or threat right before the final shot to give viewers a reason to keep watching."
+      },
+      "final_score": 4.4,
+      "score_parts": {
+        "hook": 2.1,
+        "cliffhanger": 1.5,
+        "standalone": 0.6,
+        "overall": 0.6,
+        "early_episode_funnel": 0.3,
+        "confusing_for_stranger": -0.7
+      },
+      "review_reasons": [
+        "picker_and_judge_disagree",
+        "may_confuse_strangers"
+      ],
+      "spoiler_risk": false,
+      "rank": 4,
+      "post_order": 2
+    }
+  ],
+  "posting_order": [
+    "E01-P1",
+    "E02-P1",
+    "S1",
+    "E01-P2"
+  ]
+}

@@ -8,7 +8,8 @@ Pages (sidebar):
   Run on a new show upload a scripts .zip + YOUR OWN API key -> runs src/pipeline.run_pipeline()
   Compare models    two finished runs of the same show side by side
 
-Privacy: the app ships with NO scripts and NO results. It shows local outputs/ or uploaded files only.
+Privacy: the app ships with NO Kuku scripts and NO Kuku results. It shows local outputs/, uploaded files,
+or the bundled demo/ show, which is made up (not Kuku content).
 The calculations live in src/app_logic.py (tested); this file only draws the screen.
 
 Run:  streamlit run app.py
@@ -81,8 +82,12 @@ def sidebar_run_picker():
     episodes = None
     if scripts:
         episodes = episodes_from_zip(scripts.getvalue())
-    elif data and Path(f"data/raw/{data.get('source', data['show'])}").exists():
-        episodes = episodes_from_folder(f"data/raw/{data.get('source', data['show'])}")
+    elif data:
+        src = data.get("source", data["show"])
+        for folder in (Path("data/raw") / src, Path("demo") / src):   # local scripts, else the made-up demo
+            if folder.exists():
+                episodes = episodes_from_folder(str(folder))
+                break
     return data, episodes
 
 
@@ -225,7 +230,12 @@ def page_quality(data):
     st.title("How we know it's good")
     st.write("Every number comes from a real run of the eval scripts (`eval/`). "
              "Each check is independent of the code it checks.")
-    q = L.read_quality(data.get("source", data["show"]) if data else "broken_soldier")
+    src = data.get("source", data["show"]) if data else "broken_soldier"
+    q = L.read_quality(src)
+    if not any(v.get("values") for v in q.values()) and src != "broken_soldier":
+        q = L.read_quality("broken_soldier")   # eval checks exist only for the full input pack
+        st.info(f"No quality checks were run on `{src}`. Showing the checks from the full input pack "
+                "(broken_soldier, 50 episodes): the blind gold set exists only for that show.")
     cards = [("Blind human gold set", "gold", lambda v: v[0], lambda v: f"human picks found · endings within {v[1]}s"),
              ("Independent audit", "audit", lambda v: v[0], lambda v: "promos pass 7 checks vs raw scripts"),
              ("Stability (run twice)", "stability", lambda v: v[0], lambda v: "same promos picked again"),

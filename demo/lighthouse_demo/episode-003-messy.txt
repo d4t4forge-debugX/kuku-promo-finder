@@ -1,0 +1,25 @@
+Episode number - 3
+EPISODE LOGLINE: A boat lands.
+CONTINUITY NOTES: Made-up test show, not real content.
+
+--- SCRIPT START ---
+
+SCENE 01
+Scene heading: EXT. CLIFFTOP LIGHTHOUSE - NIGHT
+Scene start: 00:00.00
+Scene end: 00:14.00
+
+Actions and dialogue:
+
+**CAMERA:**
+Start: (00:00.00) | End: (00:05.00)
+A rowing boat scrapes onto the beach.
+
+**WOMAN (Calm):**
+Start: (00:05.00) | End: (00:09.00)
+"Hello, Wren. I'm your mother."
+
+**ACTION:**
+Start: (00:09.00) | End: (00:14.00)
+Mara's lantern falls and shatters.
+

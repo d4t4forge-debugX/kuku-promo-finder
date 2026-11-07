@@ -1,0 +1,185 @@
+{
+  "show": "lighthouse_demo",
+  "source": "lighthouse_demo",
+  "picker_model": "gemini-3.8-flash",
+  "judge_model": "gemini-3.1-pro-preview",
+  "prompt_versions": [
+    "beats-v1",
+    "stitch-v1",
+    "judge-v1"
+  ],
+  "episodes": {
+    "1": 78.0,
+    "2": 72.0,
+    "3": 14.0
+  },
+  "ranked": [
+    {
+      "promo_id": "E01-P1",
+      "kind": "single",
+      "segments": [
+        {
+          "episode": 1,
+          "start": 8.0,
+          "end": 61.0,
+          "start_ts": "00:08.00",
+          "end_ts": "01:01.00"
+        }
+      ],
+      "hook_time": 8.0,
+      "hook": "An apparently drowned stranger suddenly lunges awake and violently grabs a woman's wrist.",
+      "cliffhanger": "Mara turns over a corpse wearing her father's jacket, sees a shadowy figure watching from her lighthouse, and is told her father is an impostor.",
+      "why": "A rapid escalation from physical shock to psychological thriller that redefines the entire premise in under a minute.",
+      "hook_type": "violence",
+      "ai_scores": {
+        "hook_score": 8,
+        "cliffhanger_score": 8,
+        "standalone_score": 8
+      },
+      "ai_score": 24,
+      "hook_offset": 0.0,
+      "dialogue_share": 0.41,
+      "duration": 53.0,
+      "status": "ok",
+      "flags": [],
+      "judge": {
+        "hook": 8,
+        "cliffhanger": 9,
+        "standalone": 9,
+        "overall": 9,
+        "resolved_inside": false,
+        "confusing": false,
+        "one_line_verdict": "A highly engaging, suspenseful clip that perfectly sets up a compelling mystery and ends on a fantastic cliffhanger.",
+        "fix": "Tighten the pacing between turning the body and the final line to keep momentum high."
+      },
+      "final_score": 8.95,
+      "score_parts": {
+        "hook": 2.8,
+        "cliffhanger": 2.7,
+        "standalone": 1.8,
+        "overall": 1.35,
+        "early_episode_funnel": 0.3
+      },
+      "review_reasons": [],
+      "spoiler_risk": false,
+      "rank": 1,
+      "post_order": 1
+    },
+    {
+      "promo_id": "E02-P1",
+      "kind": "single",
+      "segments": [
+        {
+          "episode": 2,
+          "start": 24.0,
+          "end": 72.0,
+          "start_ts": "00:24.00",
+          "end_ts": "01:12.00"
+        }
+      ],
+      "hook_time": 24.0,
+      "hook": "A stranger shouts up the stairs that the father didn't rescue Mara—he kidnapped her.",
+      "cliffhanger": "A swarm of boats closes in after the red flare lights up, while Mara notices her family's crest on her father's ring.",
+      "why": "Starts instantly on a shocking kidnapping accusation, accelerates into physical gunfire, and ends on a devastating visual twist.",
+      "hook_type": "reveal",
+      "ai_scores": {
+        "hook_score": 9,
+        "cliffhanger_score": 9,
+        "standalone_score": 8
+      },
+      "ai_score": 26,
+      "hook_offset": 0.0,
+      "dialogue_share": 0.35,
+      "duration": 48.0,
+      "status": "ok",
+      "flags": [
+        "ends_on_episode_ending"
+      ],
+      "judge": {
+        "hook": 8,
+        "cliffhanger": 9,
+        "standalone": 8,
+        "overall": 8,
+        "resolved_inside": false,
+        "confusing": false,
+        "one_line_verdict": "A highly engaging thriller clip with a strong opening hook and a compelling betrayal cliffhanger.",
+        "fix": "Tighten the 8-second gap between the father grabbing the gun and Mara yelling to maintain TikTok pacing."
+      },
+      "final_score": 8.9,
+      "score_parts": {
+        "hook": 2.8,
+        "cliffhanger": 2.7,
+        "standalone": 1.6,
+        "overall": 1.2,
+        "ends_on_writer_cliffhanger": 0.3,
+        "early_episode_funnel": 0.3
+      },
+      "review_reasons": [],
+      "spoiler_risk": false,
+      "rank": 2,
+      "post_order": 2
+    },
+    {
+      "promo_id": "S1",
+      "kind": "stitched",
+      "segments": [
+        {
+          "episode": 1,
+          "start": 56.0,
+          "end": 70.5,
+          "start_ts": "00:56.00",
+          "end_ts": "01:10.50"
+        },
+        {
+          "episode": 2,
+          "start": 15.0,
+          "end": 36.0,
+          "start_ts": "00:15.00",
+          "end_ts": "00:36.00"
+        }
+      ],
+      "hook_time": 56.0,
+      "hook": "A washed-ashore stranger reveals Mara's secret name and warns her that her father isn't who he claims to be.",
+      "cliffhanger": "Will the father shoot the stranger with the flare gun after being exposed as Mara's kidnapper?",
+      "why": "Hooks viewers with an eerie identity mystery on the beach, then pays it off instantly with the explosive revelation that her father kidnapped her, ending right as a weapon is drawn.",
+      "hook_type": "shocking_line",
+      "ai_scores": {},
+      "ai_score": 0,
+      "hook_offset": 0.0,
+      "dialogue_share": 0.44,
+      "duration": 35.5,
+      "status": "ok",
+      "flags": [],
+      "judge": {
+        "hook": 7,
+        "cliffhanger": 9,
+        "standalone": 3,
+        "overall": 5,
+        "resolved_inside": false,
+        "confusing": true,
+        "one_line_verdict": "The core kidnapping reveal is highly engaging, but the unexplained presence of Mara and dead bodies makes the scene too chaotic for a cold audience.",
+        "fix": "Remove the confusing shots of Mara and the bodies to focus entirely on the confrontation between the Father, the Stranger, and Wren."
+      },
+      "final_score": 6.1,
+      "score_parts": {
+        "hook": 2.45,
+        "cliffhanger": 2.7,
+        "standalone": 0.6,
+        "overall": 0.75,
+        "early_episode_funnel": 0.3,
+        "confusing_for_stranger": -0.7
+      },
+      "review_reasons": [
+        "may_confuse_strangers"
+      ],
+      "spoiler_risk": false,
+      "rank": 3,
+      "post_order": 3
+    }
+  ],
+  "posting_order": [
+    "E01-P1",
+    "E02-P1",
+    "S1"
+  ]
+}

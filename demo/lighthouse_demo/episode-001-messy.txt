@@ -1,0 +1,85 @@
+EPISODE NUMBER: Episode 1
+EPISODE LOGLINE: Mara, the lighthouse keeper's daughter, finds a stranger washed ashore who knows her secret name.
+CONTINUITY NOTES: Made-up test show, not real content.
+
+--- SCRIPT START ---
+
+SCENE 01
+Scene heading: EXT. CLIFFTOP LIGHTHOUSE - NIGHT
+Scene start: 00:00.00
+Scene end: 01:18.00
+
+Actions and dialogue:
+
+**CAMERA:**
+Start: (00:00.00) | End: (00:04.00)
+Storm waves crash against black rocks below a blinking lighthouse.
+
+**ACTION:**
+Start: (00:01.00) | End: (00:05.50)
+MARA (20s, oilskin coat) drags an unconscious man out of the surf by his collar.
+
+**MARA (Panicked):**
+Start: (00:05.50) | End: (00:08.00)
+"Breathe. Come on, breathe!"
+
+**ACTION:**
+Start: (00:08.00) | End: (00:12.00)
+The man coughs up seawater and grabs her wrist with surprising strength.
+
+**STRANGER (Hoarse, Urgent):**
+Start: (00:12.00) | End: (00:15.50)
+"Wren. They told me you'd be here, Wren."
+
+**CAMERA:**
+Start: (00:15.50) | End: (00:18.00)
+Close-up on Mara's face as the colour drains from it.
+
+**MARA (Shaken):**
+Start: (00:18.00) | End: (00:21.00)
+"Nobody has called me that in ten years."
+
+**ACTION:**
+Start: (00:21.00) | End: (00:27.00)
+Lantern light sweeps over the beach. A second body lies face down further along the sand.
+
+**STRANGER (Weak):**
+Start: (00:27.00) | End: (00:31.00)
+"Don't go near him. He's the one who sank the boat."
+
+**ACTION:**
+Start: (00:31.00) | End: (00:38.00)
+Mara hesitates, then walks toward the second body anyway, lantern raised.
+
+**FATHER (Off-screen, Shouting):**
+Start: (00:38.00) | End: (00:41.00)
+"Mara! Get back to the house! Now!"
+
+**ACTION:**
+Start: (00:41.00) | End: (00:48.00)
+Mara turns the second body over. It is wearing her father's old keeper's jacket.
+
+**MARA (Whispering):**
+Start: (00:48.00) | End: (00:51.00)
+"That's impossible. Dad never left the tower."
+
+**CAMERA:**
+Start: (00:51.00) | End: (00:56.00)
+Slow push up the cliff to the lighthouse window, where a silhouette watches them.
+
+**STRANGER (Grim):**
+Start: (00:56.00) | End: (01:01.00)
+"Your father isn't who he says he is, Wren."
+
+**ACTION:**
+Start: (01:01.00) | End: (01:08.00)
+The second body's hand twitches and closes around Mara's ankle.
+
+**MARA (Screaming):**
+Start: (01:08.00) | End: (01:10.50)
+"Let go of me!"
+
+**CAMERA:**
+Start: (01:10.50) | End: (01:18.00)
+Smash to black as the lighthouse beam goes dark.
+

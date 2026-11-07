@@ -28,13 +28,22 @@ cp .env.example .env            # then open .env and paste your key after GEMINI
 python check_key.py             # confirms the key and lists models
 python run.py path/to/show      # folder of episode .txt files, or a .zip
 ```
-Outputs land in `outputs/final/`: `<show>_report.md` (start here), `<show>_promos.csv`, `<show>_ranked.json`.
+Outputs land in `outputs/final/`: `<show>_report.md` (start here), `<show>_promos.csv`, `<show>_timecodes.csv` (editor cut list), `<show>_ranked.json`.
 
 **Swap models**, e.g. `LLM_PROVIDER=openai`, `LLM_MODEL=...`, or `JUDGE_MODEL=...` in `.env`.
-Supported providers: gemini, groq, openai, anthropic.
+Supported providers: gemini, groq, openai, anthropic. A setting given on the command line wins over `.env`.
+
+**Run for free (tested):** put a free Groq key after `GROQ_API_KEY=` in `.env`, then
+```bash
+env LLM_PROVIDER=groq LLM_MODEL=openai/gpt-oss-120b JUDGE_MODEL=openai/gpt-oss-120b python run.py path/to/show --limit 3 --workers 1
+```
+Groq's free plan allows ~200K tokens/day and 8K tokens/minute, so keep runs small (`--limit 3`, one worker); 429 rate-limit waits are retried automatically. Measured on the input pack: the default Gemini setup costs about $2.63 per 50-episode show; the free Groq setup ran 3 episodes for $0, with lower quality.
+
+**New or messy input:** problems in the scripts (unreadable timing rows, empty lines, missing episode numbers, very short episodes) are printed as `INPUT WARNING` at step 1; the run stops only if an episode number is missing or duplicated.
 
 ## Quality check
-- `python -m eval.evaluate <show>` compares the tool against a **blind human gold set** (`eval/gold_set.json`, 5 episodes chosen by a fixed rule).
+- `python -m eval.audit path/to/show` re-reads the raw scripts with separate code and checks every promo (7 checks). Result on the input pack: **79/79**.
+- `python -m eval.evaluate path/to/show` compares the tool against a **blind human gold set** (`eval/gold_set.json`, 5 episodes chosen by a fixed rule).
 - Result on the input pack: **4/5** human picks found, each as the tool's #1 for that episode; end points within **1.4s** on average, start points 13.2s apart.
 - `eval/gold_set_v2_revised.json` is an AI-assisted, **not blind** revision, kept separately as a learning example and not reported as accuracy.
 
