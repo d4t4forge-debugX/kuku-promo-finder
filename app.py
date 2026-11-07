@@ -154,7 +154,10 @@ def page_promos(data, episodes):
     if chosen == "Post first":
         st.caption("Episodes 1-15, no red flags. A new viewer who taps a promo starts at Episode 1, so these match "
                    "what they will watch next. No back-to-back repeats of episode or hook type.")
-    if not promos:
+    if not promos and chosen == "Post first" and ranked:
+        st.info("No promo in episodes 1-15 passed without a review flag, so nothing is safe to auto-post. "
+                "Open **Needs review** to see the flagged candidates and why.")
+    elif not promos:
         st.info("Nothing here yet.")
         return
 

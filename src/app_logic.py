@@ -28,7 +28,9 @@ def find_runs(folders=RUN_FOLDERS):
     """Finished runs: every <show>_ranked.json in the local outputs, then the bundled demo."""
     if isinstance(folders, Path):
         folders = (folders,)
-    return [r for f in folders if f.exists() for r in sorted(f.glob("*_ranked.json"))]
+    # within a folder, the main run first and tagged re-runs (show__tag) after it
+    return [r for f in folders if f.exists()
+            for r in sorted(f.glob("*_ranked.json"), key=lambda p: ("__" in p.name, p.name))]
 
 
 def episode_numbers(data):
